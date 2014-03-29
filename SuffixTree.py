@@ -38,6 +38,27 @@ class SuffixTree(object):
 					next_level.add(i)
 		return level_list
 
+	def to_bio_tree(self):
+		import Bio.Phylo.BaseTree as BT
+		successor_dict = _nx.bfs_successors(self.G, SuffixTree.ROOT_NAME)
+		
+		T = BT.Tree(name=SuffixTree.ROOT_NAME)
+		clade_dict = {SuffixTree.ROOT_NAME:T.clade}
+	
+		next_up = [ SuffixTree.ROOT_NAME]
+		while len(next_up) > 0:
+			current = next_up.pop(0)
+			children = successor_dict.get(current,[])
+			for c in children:
+				new_clade = BT.Clade(name=c)
+				clade_dict[c] = new_clade
+				clade_dict[current].clades.append(new_clade)
+			next_up.extend(children)
+
+		return T
+
+
+
 if __name__ == "__main__":
 	import matplotlib.pyplot as plt
 	A = SuffixTree()

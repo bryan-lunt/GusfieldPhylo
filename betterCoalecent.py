@@ -97,13 +97,17 @@ def gussman_algorithm(SNVs):
 if __name__ == "__main__":
 	import sys
 	test = readfile(sys.argv[-1])
-	test = S.array(S.hstack([S.ones(test.shape[0]).reshape(-1,1), test]),S.int_)
+	#test = S.array(S.hstack([S.ones(test.shape[0]).reshape(-1,1), test]),S.int_)
 
 
 	myTree = gussman_algorithm(test)
 	
 	if not myTree.is_tree():
 		print "COULD NOT CREATE A VALID TREE"
-	
+
+	myP = myTree.to_bio_tree()
+	import Bio.Phylo as P
+	P.draw_ascii(myP)
+
 	nx.draw_networkx(myTree.G, pos=nx.shell_layout(myTree.G, myTree.get_levels()))
 	plt.show()
