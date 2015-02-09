@@ -95,19 +95,28 @@ def gussman_algorithm(SNVs):
 
 
 if __name__ == "__main__":
+	
+	ROOT=0
+
 	import sys
 	test = readfile(sys.argv[-1])
 	#test = S.array(S.hstack([S.ones(test.shape[0]).reshape(-1,1), test]),S.int_)
-
-
+	
+	if ROOT != None:
+		the_root = test[ROOT]
+		newdata = S.vstack([1-(i == the_root) for i in test])
+		test = newdata
+	
 	myTree = gussman_algorithm(test)
 	
 	if not myTree.is_tree():
 		print "COULD NOT CREATE A VALID TREE"
-
+	if not myTree.is_binary():
+		print "Tree was not binary."
+	
 	myP = myTree.to_bio_tree()
 	import Bio.Phylo as P
 	P.draw_ascii(myP)
-
+	
 	nx.draw_networkx(myTree.G, pos=nx.shell_layout(myTree.G, myTree.get_levels()))
 	plt.show()

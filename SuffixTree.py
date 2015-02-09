@@ -1,4 +1,5 @@
 import networkx as _nx
+import networkx.algorithms as _algs
 
 class SuffixTree(object):
 	ROOT_NAME = "ROOT"
@@ -22,10 +23,10 @@ class SuffixTree(object):
 		self.G.add_edge(node_cursor,"L:" + str(name))
 	
 	def is_tree(self):
-		isDAG = _nx.is_directed_acyclic_graph(self.G)
-		degree = all([i[1] <= 1 for i in self.G.in_degree_iter()])
-
-		return isDAG and degree
+		return _algs.is_tree(self.G)
+	
+	def is_binary(self):
+		return all([i[1] <= 2 for i in self.G.in_degree_iter()])
 
 	def get_levels(self):
 		level_list = list()
